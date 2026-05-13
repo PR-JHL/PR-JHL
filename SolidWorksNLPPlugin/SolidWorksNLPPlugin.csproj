@@ -18,6 +18,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.CodeDom" />
     <Reference Include="SolidWorks.Interop.sldworks">
       <HintPath>lib\SolidWorks.Interop.sldworks.dll</HintPath>
       <Private>False</Private>

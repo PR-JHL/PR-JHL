@@ -1,102 +1,134 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swconst;
 
 namespace SolidWorksNLPPlugin
 {
     public class NlpCommandHandler : IDisposable
     {
         private readonly SldWorks _swApp;
-        private readonly LocalLlmClient _llmClient;
-        private readonly ModelBuilder _modelBuilder;
+        private CloudLlmClient _llmClient;
+        private readonly SkillManager _skillManager;
+        private readonly ScriptExecutor _scriptExecutor;
+        private ScriptGenerationResult _lastGeneratedScript;
 
         public NlpCommandHandler(SldWorks swApp)
         {
             _swApp = swApp;
-            _llmClient = new LocalLlmClient();
-            _modelBuilder = new ModelBuilder(swApp);
+            _skillManager = new SkillManager();
+            _scriptExecutor = new ScriptExecutor(swApp);
         }
 
-        public async Task<string> ProcessCommandAsync(string userInput)
+        public void InitializeLlmClient(string apiKey, string apiUrl = "https://api.openai.com/v1/chat/completions", string modelName = "gpt-4")
         {
+            _llmClient?.Dispose();
+            _llmClient = new CloudLlmClient(apiKey, apiUrl, modelName);
+        }
+
+        public bool IsLlmInitialized => _llmClient != null;
+
+        public async Task<ProcessResult> ProcessCommandAsync(string userInput)
+        {
+            if (_llmClient == null)
+            {
+                return new ProcessResult
+                {
+                    Success = false,
+                    ErrorMessage = "LLM client not initialized. Please configure API key first."
+                };
+            }
+
             try
             {
-                var parsedCommand = await _llmClient.ParseCommandAsync(userInput);
-                if (parsedCommand == null)
+                var scriptResult = await _llmClient.GenerateScriptAsync(userInput);
+                _lastGeneratedScript = scriptResult;
+
+                if (!scriptResult.Success)
                 {
-                    return "Sorry, I couldn't understand your command. Please try again.";
+                    return new ProcessResult
+                    {
+                        Success = false,
+                        ErrorMessage = scriptResult.ErrorMessage
+                    };
                 }
 
-                var result = ExecuteCommand(parsedCommand);
-                return result;
+                return new ProcessResult
+                {
+                    Success = true,
+                    Script = scriptResult.Script,
+                    Description = scriptResult.Description,
+                    OriginalInput = userInput,
+                    Parameters = scriptResult.Parameters
+                };
             }
             catch (Exception ex)
             {
-                return $"Error: {ex.Message}";
+                return new ProcessResult
+                {
+                    Success = false,
+                    ErrorMessage = $"Error: {ex.Message}"
+                };
             }
         }
 
-        private string ExecuteCommand(ParsedCommand command)
+        public ExecutionResult ExecuteScript(string script)
         {
-            switch (command.Type)
+            return _scriptExecutor.ExecuteScript(script);
+        }
+
+        public ExecutionResult ExecuteLastScript()
+        {
+            if (_lastGeneratedScript == null)
             {
-                case CommandType.CreatePrimitive:
-                    return ExecuteCreatePrimitive(command);
-                case CommandType.CreateSketch:
-                    return ExecuteCreateSketch(command);
-                case CommandType.Extrude:
-                    return ExecuteExtrude(command);
-                case CommandType.Revolve:
-                    return ExecuteRevolve(command);
-                case CommandType.Assemble:
-                    return ExecuteAssemble(command);
-                case CommandType.Modify:
-                    return ExecuteModify(command);
-                default:
-                    return $"Unknown command type: {command.Type}";
+                return new ExecutionResult
+                {
+                    Success = false,
+                    ErrorMessage = "No script has been generated yet"
+                };
             }
+
+            return ExecuteScript(_lastGeneratedScript.Script);
         }
 
-        private string ExecuteCreatePrimitive(ParsedCommand command)
+        public Skill SaveCurrentAsSkill(string name, string description = null)
         {
-            var shapeType = command.Parameters.GetValueOrDefault("shape", "");
-            var dimensions = command.Parameters.GetValueOrDefault("dimensions", "");
+            if (_lastGeneratedScript == null)
+            {
+                return null;
+            }
 
-            var (success, message) = _modelBuilder.CreatePrimitive(shapeType, command.Parameters);
-            return success ? $"Created {shapeType} successfully." : message;
+            return _skillManager.SaveSkill(
+                name,
+                description ?? _lastGeneratedScript.Description,
+                _lastGeneratedScript.Script,
+                _lastGeneratedScript.OriginalInput,
+                _lastGeneratedScript.Parameters
+            );
         }
 
-        private string ExecuteCreateSketch(ParsedCommand command)
+        public Skill SaveAsSkill(string name, string description, string script, string originalInput, Dictionary<string, object> parameters = null)
         {
-            return "Sketch creation command executed.";
+            return _skillManager.SaveSkill(name, description, script, originalInput, parameters);
         }
 
-        private string ExecuteExtrude(ParsedCommand command)
+        public List<Skill> GetAllSkills()
         {
-            var distance = double.TryParse(command.Parameters.GetValueOrDefault("distance", "0"), out var d) ? d : 10;
-            var (success, message) = _modelBuilder.Extrude(distance);
-            return success ? "Extruded successfully." : message;
+            return _skillManager.GetAllSkills();
         }
 
-        private string ExecuteRevolve(ParsedCommand command)
+        public ExecutionResult ExecuteSkill(Skill skill)
         {
-            var angle = double.TryParse(command.Parameters.GetValueOrDefault("angle", "360"), out var a) ? a : 360;
-            var (success, message) = _modelBuilder.Revolve(angle);
-            return success ? "Revolved successfully." : message;
+            _skillManager.RecordSkillUse(skill);
+            return _scriptExecutor.ExecuteScript(skill.Script);
         }
 
-        private string ExecuteAssemble(ParsedCommand command)
+        public bool DeleteSkill(Skill skill)
         {
-            return "Assembly command executed.";
+            return _skillManager.DeleteSkill(skill);
         }
 
-        private string ExecuteModify(ParsedCommand command)
-        {
-            return "Modify command executed.";
-        }
+        public ScriptGenerationResult LastGeneratedScript => _lastGeneratedScript;
 
         public void Dispose()
         {
@@ -104,19 +136,13 @@ namespace SolidWorksNLPPlugin
         }
     }
 
-    public enum CommandType
+    public class ProcessResult
     {
-        CreatePrimitive,
-        CreateSketch,
-        Extrude,
-        Revolve,
-        Assemble,
-        Modify
-    }
-
-    public class ParsedCommand
-    {
-        public CommandType Type { get; set; }
-        public Dictionary<string, string> Parameters { get; set; } = new Dictionary<string, string>();
+        public bool Success { get; set; }
+        public string Script { get; set; }
+        public string Description { get; set; }
+        public string OriginalInput { get; set; }
+        public Dictionary<string, object> Parameters { get; set; }
+        public string ErrorMessage { get; set; }
     }
 }
