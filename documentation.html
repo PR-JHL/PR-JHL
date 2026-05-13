@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolidWorks AI Script Assistant - 使用指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .content-wrapper {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px;
+            margin-bottom: 40px;
+        }
+
+        section {
+            margin-bottom: 60px;
+        }
+
+        section h2 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        section h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin: 30px 0 15px 0;
+        }
+
+        section p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h4 {
+            color: #667eea;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .step-list {
+            counter-reset: step;
+            list-style: none;
+            margin: 30px 0;
+        }
+
+        .step-list li {
+            counter-increment: step;
+            padding: 25px 25px 25px 80px;
+            position: relative;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            border-left: 4px solid #48bb78;
+        }
+
+        .tip-box {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .tip-box strong {
+            color: #f59e0b;
+        }
+
+        .warning-box {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box strong {
+            color: #ef4444;
+        }
+
+        .example-box {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .example-box h4 {
+            color: #0ea5e9;
+            margin-bottom: 15px;
+        }
+
+        .workflow-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 40px 0;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .workflow-step {
+            text-align: center;
+            padding: 20px;
+            min-width: 150px;
+        }
+
+        .workflow-step .icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 2em;
+        }
+
+        .workflow-step .title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .workflow-arrow {
+            font-size: 2em;
+            color: #667eea;
+            margin: 0 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .faq-item {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .faq-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 10px 5px;
+            transition: transform 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        footer p {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .content-wrapper {
+                padding: 30px 20px;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+
+            section h2 {
+                font-size: 1.8em;
+            }
+
+            .workflow-arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+
+            .workflow-diagram {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛠️ SolidWorks AI Script Assistant</h1>
+            <p>使用自然语言驱动SolidWorks智能建模</p>
+        </header>
+
+        <div class="content-wrapper">
+            <section>
+                <h2>📖 简介</h2>
+                <p>
+                    SolidWorks AI Script Assistant 是一款创新的SolidWorks插件，利用人工智能技术将您的自然语言描述转换为可执行的SolidWorks API脚本。无需深入了解编程，只需用日常语言描述您的设计意图，AI就能帮您生成精准的建模脚本。
+                </p>
+                <div class="tip-box">
+                    <strong>💡 核心优势：</strong> 通过云端AI API实现智能脚本生成，支持将常用操作保存为可复用的Skills，大幅提升建模效率。
+                </div>
+            </section>
+
+            <section>
+                <h2>✨ 核心功能</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <span class="feature-icon">🤖</span>
+                        <h4>AI智能生成</h4>
+                        <p>输入自然语言描述，AI自动生成SolidWorks API C#脚本，无需手动编程</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">⚡</span>
+                        <h4>实时编译执行</h4>
+                        <p>生成的脚本可直接在插件内编译和执行，即时看到建模效果</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">💾</span>
+                        <h4>Skill保存系统</h4>
+                        <p>将有价值的脚本保存为可复用的Skills，随时调用历史操作</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🔒</span>
+                        <h4>安全可控</h4>
+                        <p>脚本执行前可预览确认，支持在测试环境中验证，确保操作安全</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🔧</span>
+                        <h4>灵活配置</h4>
+                        <p>支持自定义API端点和模型，可接入各类OpenAI兼容服务</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">📦</span>
+                        <h4>兼容性强</h4>
+                        <p>完美支持SolidWorks 2022及以上版本，x64架构</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>🔄 工作流程</h2>
+                <div class="workflow-diagram">
+                    <div class="workflow-step">
+                        <div class="icon">1️⃣</div>
+                        <div class="title">配置API</div>
+                        <div>设置API密钥</div>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <div class="icon">2️⃣</div>
+                        <div class="title">描述需求</div>
+                        <div>输入自然语言</div>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <div class="icon">3️⃣</div>
+                        <div class="title">生成脚本</div>
+                        <div>AI智能生成</div>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <div class="icon">4️⃣</div>
+                        <div class="title">预览执行</div>
+                        <div>确认后执行</div>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <div class="icon">5️⃣</div>
+                        <div class="title">保存Skill</div>
+                        <div>复用操作</div>
+                    </div>
+                </div>
+
+                <ol class="step-list">
+                    <li>
+                        <strong>配置API密钥</strong><br>
+                        在插件界面输入您的OpenAI API密钥，选择合适的模型（推荐GPT-4）
+                    </li>
+                    <li>
+                        <strong>描述建模需求</strong><br>
+                        使用自然语言描述您想要在SolidWorks中执行的操作，如"创建一个100mm的立方体"
+                    </li>
+                    <li>
+                        <strong>AI生成脚本</strong><br>
+                        点击生成按钮，AI将分析您的描述并生成对应的SolidWorks API C#脚本
+                    </li>
+                    <li>
+                        <strong>预览和执行</strong><br>
+                        在执行前预览生成的脚本，确认无误后点击执行，脚本将在SolidWorks中运行
+                    </li>
+                    <li>
+                        <strong>保存为Skill（可选）</strong><br>
+                        对于常用的操作，可以将其保存为Skill，下次直接调用，无需重新生成
+                    </li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>🚀 快速开始</h2>
+
+                <h3>1. 环境要求</h3>
+                <table>
+                    <tr>
+                        <th>组件</th>
+                        <th>要求</th>
+                    </tr>
+                    <tr>
+                        <td>操作系统</td>
+                        <td>Windows 10/11 (64位)</td>
+                    </tr>
+                    <tr>
+                        <td>开发工具</td>
+                        <td>Visual Studio 2022 或更高版本</td>
+                    </tr>
+                    <tr>
+                        <td>.NET Framework</td>
+                        <td>.NET Framework 4.8</td>
+                    </tr>
+                    <tr>
+                        <td>SolidWorks</td>
+                        <td>SolidWorks 2022 或更高版本</td>
+                    </tr>
+                    <tr>
+                        <td>API服务</td>
+                        <td>OpenAI API 密钥</td>
+                    </tr>
+                </table>
+
+                <h3>2. 安装步骤</h3>
+                <div class="example-box">
+                    <h4>步骤 1: 获取SolidWorks API程序集</h4>
+                    <p>从SolidWorks安装目录复制以下文件到项目的 <code>lib</code> 文件夹：</p>
+                    <div class="code-block">
+                        SolidWorks.Interop.sldworks.dll
+                        SolidWorks.Interop.swconst.dll
+                        SolidWorks.Interop.swdocumentmgr.dll
+                    </div>
+                    <p>通常位于: <code>C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS\api\redist\</code></p>
+                </div>
+
+                <div class="example-box">
+                    <h4>步骤 2: 编译项目</h4>
+                    <div class="code-block">
+                        1. 使用Visual Studio打开 SolidWorksNLPPlugin.sln
+                        2. 选择 x64 平台配置
+                        3. 选择 Release 配置
+                        4. 点击「生成」→「生成解决方案」
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h4>步骤 3: 注册插件</h4>
+                    <div class="code-block">
+                        以管理员身份运行命令提示符，导航到编译输出目录，执行：
+                        regasm /codebase /tlb:SolidWorksNLPPlugin.tlb SolidWorksNLPPlugin.dll
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h4>步骤 4: 启用插件</h4>
+                    <div class="code-block">
+                        1. 启动SolidWorks
+                        2. 打开「工具」→「插件」
+                        3. 找到「SolidWorks AI Script Assistant」并勾选
+                        4. 点击「确定」
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>💡 使用示例</h2>
+
+                <h3>示例1: 创建基础几何体</h3>
+                <div class="example-box">
+                    <h4>输入描述</h4>
+                    <div class="code-block">创建一个100mm的立方体</div>
+                    <h4>AI生成的脚本</h4>
+                    <div class="code-block">
+// 创建100mm的立方体
+var partDoc = swApp.ActiveDoc as PartDoc;
+partDoc.InsertSketch2(true);
+var sketchManager = partDoc.SketchManager;
+sketchManager.InsertRectangle(0, 0, 0, 0.1, 0.1, 0);
+partDoc.InsertSketch2(true);
+var featureManager = partDoc.FeatureManager;
+featureManager.FeatureExtrusion2(true, false, false, 0, 0, 0.1, 0.01, 0.01, 
+    false, false, false, false, 0, 0, false, false, true, true, true, 0, 0, false);
+                    </div>
+                </div>
+
+                <h3>示例2: 创建圆柱体</h3>
+                <div class="example-box">
+                    <h4>输入描述</h4>
+                    <div class="code-block">创建一个直径50mm、高度200mm的圆柱</div>
+                    <h4>AI生成的脚本</h4>
+                    <div class="code-block">
+// 创建直径50mm、高度200mm的圆柱
+var partDoc = swApp.ActiveDoc as PartDoc;
+partDoc.InsertSketch2(true);
+var sketchManager = partDoc.SketchManager;
+sketchManager.CreateCircle(0, 0, 0, 0.025, 0, 0);
+partDoc.InsertSketch2(true);
+var featureManager = partDoc.FeatureManager;
+featureManager.FeatureExtrusion2(true, false, false, 0, 0, 0.2, 0.01, 0.01, 
+    false, false, false, false, 0, 0, false, false, true, true, true, 0, 0, false);
+                    </div>
+                </div>
+
+                <h3>示例3: 复杂建模操作</h3>
+                <div class="example-box">
+                    <h4>输入描述</h4>
+                    <div class="code-block">
+创建一个新零件，在前视基准面上画一个边长100mm的正方形草图，然后拉伸50mm
+                    </div>
+                    <h4>AI生成的脚本</h4>
+                    <div class="code-block">
+// 创建新零件，绘制正方形草图并拉伸
+var partTemplate = swApp.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swDefaultTemplatePart);
+var newDoc = swApp.NewDocument(partTemplate, 0, 0, 0);
+
+// 选择前视基准面
+var selMgr = newDoc.SelectionManager;
+newDoc.Extension.SelectByID2("Front", "PLANE", 0, 0, 0, false, 0, null, 0);
+
+// 创建草图
+var sketchManager = newDoc.SketchManager;
+newDoc.InsertSketch2(true);
+
+// 绘制正方形
+double size = 0.1; // 100mm
+sketchManager.CreateLine(-size/2, -size/2, 0, size/2, -size/2, 0);
+sketchManager.CreateLine(size/2, -size/2, 0, size/2, size/2, 0);
+sketchManager.CreateLine(size/2, size/2, 0, -size/2, size/2, 0);
+sketchManager.CreateLine(-size/2, size/2, 0, -size/2, -size/2, 0);
+
+// 拉伸
+newDoc.InsertSketch2(true);
+var featureManager = newDoc.FeatureManager;
+featureManager.FeatureExtrusion2(true, false, false, 0, 0, 0.05, 0.01, 0.01, 
+    false, false, false, false, 0, 0, false, false, true, true, true, 0, 0, false);
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>🎯 Skill管理</h2>
+                <p>
+                    Skill是插件的核心功能之一，允许您将常用的建模操作保存为可复用的模板，避免重复生成相似脚本。
+                </p>
+
+                <h3>保存Skill</h3>
+                <ol class="step-list">
+                    <li>使用AI生成一个满意的脚本</li>
+                    <li>点击「Save as Skill」按钮</li>
+                    <li>在弹出的对话框中输入Skill名称和描述</li>
+                    <li>点击「Save」保存</li>
+                </ol>
+
+                <h3>使用Skill</h3>
+                <ol class="step-list">
+                    <li>切换到「Skills」标签页</li>
+                    <li>在列表中找到需要的Skill</li>
+                    <li>双击或点击「Use Selected Skill」加载</li>
+                    <li>脚本将自动填充到脚本区域</li>
+                    <li>点击「Execute Script」执行</li>
+                </ol>
+
+                <h3>管理Skill</h3>
+                <div class="tip-box">
+                    <strong>💡 提示：</strong> Skill文件保存在 <code>%APPDATA%\SolidWorksNLPPlugin\Skills\</code> 目录，以JSON格式存储，可以手动备份或分享。
+                </div>
+            </section>
+
+            <section>
+                <h2>⚙️ API配置</h2>
+                
+                <h3>支持的API服务</h3>
+                <table>
+                    <tr>
+                        <th>服务</th>
+                        <th>默认URL</th>
+                        <th>推荐模型</th>
+                    </tr>
+                    <tr>
+                        <td>OpenAI</td>
+                        <td>https://api.openai.com/v1/chat/completions</td>
+                        <td>gpt-4</td>
+                    </tr>
+                    <tr>
+                        <td>Azure OpenAI</td>
+                        <td>你的Azure端点</td>
+                        <td>gpt-4</td>
+                    </tr>
+                    <tr>
+                        <td>其他兼容服务</td>
+                        <td>自定义</td>
+                        <td>兼容模型</td>
+                    </tr>
+                </table>
+
+                <h3>配置步骤</h3>
+                <div class="example-box">
+                    <h4>使用OpenAI API</h4>
+                    <div class="code-block">
+API Key: 你的OpenAI API密钥
+API URL: https://api.openai.com/v1/chat/completions (默认)
+Model: gpt-4 (推荐)
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ 安全提醒：</strong>
+                    <ul>
+                        <li>API密钥仅保存在内存中，不会持久化存储</li>
+                        <li>请勿在代码中硬编码API密钥</li>
+                        <li>建议设置API使用限额，避免超额消费</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h2>❓ 常见问题</h2>
+
+                <div class="faq-item">
+                    <h4>Q: 插件没有出现在SolidWorks中？</h4>
+                    <p><strong>A:</strong> 请确认以下几点：</p>
+                    <ul>
+                        <li>使用了x64平台编译Release版本</li>
+                        <li>正确使用regasm注册了dll（需要管理员权限）</li>
+                        <li>SolidWorks版本是2022或更高</li>
+                        <li>检查SolidWorks「工具」→「插件」列表</li>
+                    </ul>
+                </div>
+
+                <div class="faq-item">
+                    <h4>Q: API调用失败？</h4>
+                    <p><strong>A:</strong> 可能的原因和解决方案：</p>
+                    <ul>
+                        <li>API密钥错误或已过期 → 检查并更新API密钥</li>
+                        <li>网络连接问题 → 确保网络畅通</li>
+                        <li>API额度用完 → 检查账户余额和限额</li>
+                        <li>API URL配置错误 → 确认端点地址正确</li>
+                    </ul>
+                </div>
+
+                <div class="faq-item">
+                    <h4>Q: 脚本执行出错？</h4>
+                    <p><strong>A:</strong> 常见原因和解决方案：</p>
+                    <ul>
+                        <li>AI生成的脚本有语法错误 → 尝试重新生成</li>
+                        <li>前置条件不满足 → 确保有激活的零件文档</li>
+                        <li>SolidWorks API调用方式不正确 → 手动调整脚本</li>
+                        <li>模型文档状态异常 → 新建或打开零件文档</li>
+                    </ul>
+                </div>
+
+                <div class="faq-item">
+                    <h4>Q: 如何使用其他AI模型？</h4>
+                    <p><strong>A:</strong> 支持使用任何兼容OpenAI API格式的服务，只需在配置界面修改API URL和模型名称即可。</p>
+                </div>
+
+                <div class="faq-item">
+                    <h4>Q: Skill文件在哪里？</h4>
+                    <p><strong>A:</strong> 保存在用户应用数据目录：<code>%APPDATA%\SolidWorksNLPPlugin\Skills\</code></p>
+                </div>
+            </section>
+
+            <section>
+                <h2>🛡️ 安全建议</h2>
+                <div class="warning-box">
+                    <strong>⚠️ 重要安全提示：</strong>
+                    <ul style="margin-top: 10px;">
+                        <li style="margin-bottom: 8px;"><strong>脚本验证：</strong>执行前务必预览生成的脚本，确认操作符合预期</li>
+                        <li style="margin-bottom: 8px;"><strong>备份数据：</strong>重要操作前建议备份SolidWorks文件</li>
+                        <li style="margin-bottom: 8px;"><strong>测试环境：</strong>新脚本建议先在测试环境中验证</li>
+                        <li style="margin-bottom: 8px;"><strong>API安全：</strong>API密钥仅存储在内存，不持久化</li>
+                        <li><strong>权限控制：</strong>使用具有适当权限的账户运行插件</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h2>📋 技术规格</h2>
+                <table>
+                    <tr>
+                        <th>项目</th>
+                        <th>规格</th>
+                    </tr>
+                    <tr>
+                        <td>编程语言</td>
+                        <td>C# (.NET Framework 4.8)</td>
+                    </tr>
+                    <tr>
+                        <td>平台</td>
+                        <td>Windows x64</td>
+                    </tr>
+                    <tr>
+                        <td>最低SolidWorks版本</td>
+                        <td>SolidWorks 2022</td>
+                    </tr>
+                    <tr>
+                        <td>API调用方式</td>
+                        <td>OpenAI Chat Completion API</td>
+                    </tr>
+                    <tr>
+                        <td>脚本格式</td>
+                        <td>C# (SolidWorks API)</td>
+                    </tr>
+                    <tr>
+                        <td>Skill存储</td>
+                        <td>JSON文件</td>
+                    </tr>
+                    <tr>
+                        <td>UI框架</td>
+                        <td>Windows Forms</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section>
+                <h2>🔮 未来功能</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>脚本编辑功能</h4>
+                        <p>内置代码编辑器，支持语法高亮和自动补全</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>参数化脚本</h4>
+                        <p>支持脚本参数化，一次生成多次使用</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>批量执行</h4>
+                        <p>支持多个Skills批量执行，自动化工作流</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Skill分享</h4>
+                        <p>支持Skill导入导出，方便团队协作</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p><strong>SolidWorks AI Script Assistant</strong></p>
+            <p>基于自然语言的智能SolidWorks建模插件</p>
+            <p style="margin-top: 15px; font-size: 0.9em;">
+                兼容 SolidWorks 2022+ | OpenAI API 驱动
+            </p>
+            <p style="margin-top: 10px; font-size: 0.85em; opacity: 0.8;">
+                本项目与Dassault Systèmes SolidWorks Corporation无关
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
