@@ -1,0 +1,129 @@
+<chapter>
+  <title>第二章：安装指南</title>
+  
+  <section>
+    <title>2.1 环境要求</title>
+    <paragraph>
+      在安装插件之前，请确保你的系统满足以下要求：
+    </paragraph>
+    <list>
+      <item><strong>操作系统：</strong>Windows 10/11 (64位)</item>
+      <item><strong>SolidWorks：</strong>SolidWorks 2022或更高版本</item>
+      <item><strong>.NET Framework：</strong>.NET Framework 4.8</item>
+      <item><strong>开发工具：</strong>Visual Studio 2022或更高版本（仅开发需要）</item>
+    </list>
+    
+    <warning>
+      <paragraph>
+        插件仅支持64位操作系统和64位版本的SolidWorks。
+      </paragraph>
+    </warning>
+  </section>
+  
+  <section>
+    <title>2.2 获取SolidWorks API程序集</title>
+    <paragraph>
+      由于SolidWorks API程序集是商业软件的一部分，需要从SolidWorks安装目录获取。
+    </paragraph>
+    <procedure>
+      <step>
+        <title>步骤1：定位API目录</title>
+        <paragraph>
+          默认情况下，SolidWorks API程序集位于以下目录：
+        </paragraph>
+        <code>
+          C:\Program Files\SOLIDWORKS Corp\SOLIDWORKS\api\redist\
+        </code>
+      </step>
+      <step>
+        <title>步骤2：复制必要文件</title>
+        <paragraph>
+          需要复制以下三个文件到项目的<code>lib</code>文件夹：
+        </paragraph>
+        <code-block language="text">
+          SolidWorks.Interop.sldworks.dll
+          SolidWorks.Interop.swconst.dll
+          SolidWorks.Interop.swdocumentmgr.dll
+        </code-block>
+      </step>
+    </procedure>
+  </section>
+  
+  <section>
+    <title>2.3 编译项目</title>
+    <paragraph>
+      使用Visual Studio编译项目：
+    </paragraph>
+    <procedure>
+      <step>
+        <title>打开解决方案</title>
+        <paragraph>
+          使用Visual Studio打开<code>SolidWorksNLPPlugin.sln</code>
+        </paragraph>
+      </step>
+      <step>
+        <title>选择平台配置</title>
+        <paragraph>
+          在工具栏中选择<code>x64</code>平台配置
+        </paragraph>
+      </step>
+      <step>
+        <title>选择构建配置</title>
+        <paragraph>
+          选择<code>Release</code>配置
+        </paragraph>
+      </step>
+      <step>
+        <title>执行构建</title>
+        <paragraph>
+          点击「生成」→「生成解决方案」
+        </paragraph>
+      </step>
+    </procedure>
+  </section>
+  
+  <section>
+    <title>2.4 注册插件</title>
+    <paragraph>
+      使用<code>regasm</code>工具注册插件：
+    </paragraph>
+    <code-block language="bash">
+      # 以管理员身份运行命令提示符
+      cd bin\x64\Release\
+      regasm /codebase /tlb:SolidWorksNLPPlugin.tlb SolidWorksNLPPlugin.dll
+    </code-block>
+    
+    <note>
+      <paragraph>
+        必须以管理员身份运行命令提示符，否则注册会失败。
+      </paragraph>
+    </note>
+  </section>
+  
+  <section>
+    <title>2.5 启用插件</title>
+    <procedure>
+      <step>
+        <title>启动SolidWorks</title>
+      </step>
+      <step>
+        <title>打开插件管理器</title>
+        <paragraph>
+          点击「工具」→「插件」
+        </paragraph>
+      </step>
+      <step>
+        <title>启用插件</title>
+        <paragraph>
+          在插件列表中找到「SolidWorks AI Script Assistant」并勾选
+        </paragraph>
+      </step>
+      <step>
+        <title>确认启用</title>
+        <paragraph>
+          点击「确定」按钮
+        </paragraph>
+      </step>
+    </procedure>
+  </section>
+</chapter>

@@ -1,0 +1,35 @@
+<project>
+  <title>SolidWorks AI Script Assistant 技术文档</title>
+  <subtitle>使用Pretext编写的技术文档示例</subtitle>
+  <author>
+    <person name="学习开发者" email="developer@example.com"/>
+  </author>
+  <copyright>2024</copyright>
+  <license>CC BY-NC-SA 4.0</license>
+  <publisher>SolidWorks AI Script Assistant Team</publisher>
+  
+  <subject>CAD软件插件开发</subject>
+  <subject>SolidWorks API</subject>
+  <subject>人工智能</subject>
+  
+  <language>zh</language>
+  <status>draft</status>
+  
+  <series>技术文档系列</series>
+  
+  <input>
+    <xi:include href="frontmatter.ptx"/>
+    <xi:include href="introduction.ptx"/>
+    <xi:include href="installation.ptx"/>
+    <xi:include href="usage.ptx"/>
+    <xi:include href="api-reference.ptx"/>
+    <xi:include href="examples.ptx"/>
+    <xi:include href="appendix.ptx"/>
+  </input>
+  
+  <output>
+    <html/>
+    <epub/>
+    <pdf/>
+  </output>
+</project>

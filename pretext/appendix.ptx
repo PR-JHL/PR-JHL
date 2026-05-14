@@ -1,0 +1,120 @@
+<chapter>
+  <title>附录</title>
+  
+  <section>
+    <title>A. 常用SolidWorks API对象</title>
+    <table>
+      <thead>
+        <tr>
+          <th>对象</th>
+          <th>描述</th>
+          <th>常用方法</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SldWorks</td>
+          <td>SolidWorks应用程序对象</td>
+          <td>ActiveDoc, NewDocument, GetUserPreferenceStringValue</td>
+        </tr>
+        <tr>
+          <td>ModelDoc2</td>
+          <td>文档对象</td>
+          <td>InsertSketch2, SaveAs, Extension.SelectByID2</td>
+        </tr>
+        <tr>
+          <td>PartDoc</td>
+          <td>零件文档对象</td>
+          <td>InsertSketch2</td>
+        </tr>
+        <tr>
+          <td>SketchManager</td>
+          <td>草图管理器</td>
+          <td>CreateLine, CreateCircle, InsertRectangle</td>
+        </tr>
+        <tr>
+          <td>FeatureManager</td>
+          <td>特征管理器</td>
+          <td>FeatureExtrusion2, FeatureRevolve2</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  
+  <section>
+    <title>B. 错误代码参考</title>
+    <table>
+      <thead>
+        <tr>
+          <th>错误类型</th>
+          <th>可能原因</th>
+          <th>解决方案</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>API连接失败</td>
+          <td>密钥错误或网络问题</td>
+          <td>检查API密钥和网络连接</td>
+        </tr>
+        <tr>
+          <td>脚本编译失败</td>
+          <td>代码语法错误</td>
+          <td>检查生成的脚本代码</td>
+        </tr>
+        <tr>
+          <td>脚本执行失败</td>
+          <td>缺少前置条件</td>
+          <td>确保有激活的零件文档</td>
+        </tr>
+        <tr>
+          <td>插件未显示</td>
+          <td>注册失败</td>
+          <td>重新注册插件</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  
+  <section>
+    <title>C. 快捷键</title>
+    <table>
+      <thead>
+        <tr>
+          <th>快捷键</th>
+          <th>功能</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ctrl+Enter</td>
+          <td>生成脚本</td>
+        </tr>
+        <tr>
+          <td>Ctrl+Shift+E</td>
+          <td>执行脚本</td>
+        </tr>
+        <tr>
+          <td>Ctrl+S</td>
+          <td>保存为Skill</td>
+        </tr>
+        <tr>
+          <td>Ctrl+L</td>
+          <td>加载Skill</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  
+  <section>
+    <title>D. Pretext学习资源</title>
+    <paragraph>
+      以下是学习Pretext的推荐资源：
+    </paragraph>
+    <list>
+      <item><strong>Pretext官方文档：</strong>https://pretextbook.org/</item>
+      <item><strong>Pretext教程：</strong>https://pretextbook.org/doc/guide/html/index.html</item>
+      <item><strong>Pretext示例：</strong>https://github.com/PreTeXtBook/pretext-examples</item>
+    </list>
+  </section>
+</chapter>

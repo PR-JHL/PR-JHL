@@ -1,0 +1,180 @@
+<chapter>
+  <title>第三章：使用指南</title>
+  
+  <section>
+    <title>3.1 配置API</title>
+    <paragraph>
+      在使用插件之前，需要配置AI API：
+    </paragraph>
+    <procedure>
+      <step>
+        <title>打开插件面板</title>
+        <paragraph>
+          在SolidWorks任务面板中找到「AI Assistant」标签
+        </paragraph>
+      </step>
+      <step>
+        <title>输入API密钥</title>
+        <paragraph>
+          在「API Key」输入框中输入你的OpenAI API密钥
+        </paragraph>
+      </step>
+      <step>
+        <title>配置API端点（可选）</title>
+        <paragraph>
+          默认使用OpenAI官方API，如果使用其他服务，修改「API URL」
+        </paragraph>
+      </step>
+      <step>
+        <title>选择模型</title>
+        <paragraph>
+          在「Model」输入框中选择使用的模型，推荐使用<code>gpt-4</code>
+        </paragraph>
+      </step>
+      <step>
+        <title>连接API</title>
+        <paragraph>
+          点击「Connect」按钮验证配置
+        </paragraph>
+      </step>
+    </procedure>
+    
+    <warning>
+      <paragraph>
+        API密钥仅存储在内存中，不会持久化保存。每次启动SolidWorks都需要重新配置。
+      </paragraph>
+    </warning>
+  </section>
+  
+  <section>
+    <title>3.2 生成脚本</title>
+    <paragraph>
+      使用自然语言描述生成脚本：
+    </paragraph>
+    <procedure>
+      <step>
+        <title>描述需求</title>
+        <paragraph>
+          在输入框中用自然语言描述你想要执行的操作，例如：
+        </paragraph>
+        <code>创建一个100mm的立方体</code>
+      </step>
+      <step>
+        <title>生成脚本</title>
+        <paragraph>
+          点击「Generate Script」按钮，AI将生成对应的C#脚本
+        </paragraph>
+      </step>
+      <step>
+        <title>预览脚本</title>
+        <paragraph>
+          在脚本预览区域查看生成的代码
+        </paragraph>
+      </step>
+    </procedure>
+  </section>
+  
+  <section>
+    <title>3.3 执行脚本</title>
+    <paragraph>
+      执行生成的脚本：
+    </paragraph>
+    <procedure>
+      <step>
+        <title>确认脚本</title>
+        <paragraph>
+          仔细检查生成的脚本，确保操作符合预期
+        </paragraph>
+      </step>
+      <step>
+        <title>执行脚本</title>
+        <paragraph>
+          点击「Execute Script」按钮执行脚本
+        </paragraph>
+      </step>
+      <step>
+        <title>查看结果</title>
+        <paragraph>
+          SolidWorks将执行脚本中的操作，创建相应的模型
+        </paragraph>
+      </step>
+    </procedure>
+  </section>
+  
+  <section>
+    <title>3.4 保存和使用Skill</title>
+    <paragraph>
+      将常用操作保存为Skill：
+    </paragraph>
+    <procedure>
+      <step>
+        <title>生成脚本</title>
+        <paragraph>
+          按照前面的步骤生成一个脚本
+        </paragraph>
+      </step>
+      <step>
+        <title>保存为Skill</title>
+        <paragraph>
+          点击「Save as Skill」按钮
+        </paragraph>
+      </step>
+      <step>
+        <title>填写信息</title>
+        <paragraph>
+          在弹出的对话框中输入Skill名称和描述
+        </paragraph>
+      </step>
+      <step>
+        <title>确认保存</title>
+        <paragraph>
+          点击「Save」按钮保存
+        </paragraph>
+      </step>
+    </procedure>
+    
+    <paragraph>
+      使用已保存的Skill：
+    </paragraph>
+    <procedure>
+      <step>
+        <title>切换到Skills标签</title>
+        <paragraph>
+          点击「Skills」标签页
+        </paragraph>
+      </step>
+      <step>
+        <title>选择Skill</title>
+        <paragraph>
+          在列表中选择需要的Skill
+        </paragraph>
+      </step>
+      <step>
+        <title>使用Skill</title>
+        <paragraph>
+          双击或点击「Use Selected Skill」按钮
+        </paragraph>
+      </step>
+      <step>
+        <title>执行脚本</title>
+        <paragraph>
+          脚本将被加载到编辑器中，点击「Execute Script」执行
+        </paragraph>
+      </step>
+    </procedure>
+  </section>
+  
+  <section>
+    <title>3.5 实用技巧</title>
+    <paragraph>
+      以下是一些使用插件的实用技巧：
+    </paragraph>
+    <list>
+      <item><strong>清晰描述：</strong>描述越详细，生成的脚本越准确</item>
+      <item><strong>包含尺寸：</strong>明确指定尺寸和单位，如「100mm」</item>
+      <item><strong>分步操作：</strong>复杂操作可以分步骤描述</item>
+      <item><strong>预览验证：</strong>执行前务必预览脚本内容</item>
+      <item><strong>保存常用：</strong>将常用操作保存为Skill，提高效率</item>
+    </list>
+  </section>
+</chapter>

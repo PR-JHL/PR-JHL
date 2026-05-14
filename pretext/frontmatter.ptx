@@ -1,0 +1,36 @@
+<frontmatter>
+  <abstract>
+    <paragraph>
+      本项目旨在通过实践学习Pretext文档编写技术，同时为SolidWorks AI Script Assistant插件创建专业的技术文档。
+      Pretext是一个用于编写高质量技术文档的标记语言，特别适合数学、科学和工程领域的内容创作。
+    </paragraph>
+  </abstract>
+  
+  <preface>
+    <title>前言</title>
+    <paragraph>
+      欢迎来到Pretext学习之旅！本项目将帮助你掌握Pretext文档编写技能，同时为SolidWorks AI Script Assistant插件建立完整的技术文档体系。
+    </paragraph>
+    <paragraph>
+      在学习过程中，你将：
+    </paragraph>
+    <list>
+      <item>了解Pretext的基本语法和结构</item>
+      <item>学习如何编写技术文档</item>
+      <item>掌握数学公式的排版</item>
+      <item>创建代码示例和代码块</item>
+      <item>生成多种格式的输出（HTML、PDF、EPUB）</item>
+    </list>
+  </preface>
+  
+  <dedication>
+    献给所有热爱技术文档编写的开发者们
+  </dedication>
+  
+  <acknowledgments>
+    <title>致谢</title>
+    <paragraph>
+      感谢Pretext社区提供如此优秀的文档编写工具，感谢SolidWorks API团队提供的强大开发接口。
+    </paragraph>
+  </acknowledgments>
+</frontmatter>

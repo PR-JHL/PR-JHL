@@ -1,0 +1,134 @@
+<chapter>
+  <title>第四章：API参考</title>
+  
+  <section>
+    <title>4.1 插件架构</title>
+    <paragraph>
+      插件采用模块化设计，主要包含以下组件：
+    </paragraph>
+    <list>
+      <item><code>Plugin.cs</code> - SolidWorks插件入口</item>
+      <item><code>NlpCommandHandler.cs</code> - 命令处理器</item>
+      <item><code>CloudLlmClient.cs</code> - 云端AI客户端</item>
+      <item><code>ScriptExecutor.cs</code> - 脚本执行器</item>
+      <item><code>SkillManager.cs</code> - Skill管理器</item>
+      <item><code>MainPanel.cs</code> - 用户界面</item>
+    </list>
+  </section>
+  
+  <section>
+    <title>4.2 CloudLlmClient 类</title>
+    <paragraph>
+      <code>CloudLlmClient</code>类负责与云端AI API通信：
+    </paragraph>
+    <code-block language="csharp">
+      public class CloudLlmClient : IDisposable
+      {
+          public CloudLlmClient(string apiKey, string apiUrl = "...", string modelName = "gpt-4");
+          public Task<ScriptGenerationResult> GenerateScriptAsync(string userInput);
+          public void Dispose();
+      }
+    </code-block>
+    
+    <subsection>
+      <title>4.2.1 构造函数参数</title>
+      <table>
+        <thead>
+          <tr>
+            <th>参数</th>
+            <th>类型</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>apiKey</td>
+            <td>string</td>
+            <td>API密钥</td>
+          </tr>
+          <tr>
+            <td>apiUrl</td>
+            <td>string</td>
+            <td>API端点URL，默认OpenAI</td>
+          </tr>
+          <tr>
+            <td>modelName</td>
+            <td>string</td>
+            <td>模型名称，默认gpt-4</td>
+          </tr>
+        </tbody>
+      </table>
+    </subsection>
+  </section>
+  
+  <section>
+    <title>4.3 ScriptExecutor 类</title>
+    <paragraph>
+      <code>ScriptExecutor</code>类负责编译和执行脚本：
+    </paragraph>
+    <code-block language="csharp">
+      public class ScriptExecutor
+      {
+          public ScriptExecutor(SldWorks swApp);
+          public ExecutionResult ExecuteScript(string scriptCode, ModelDoc2 activeModel = null);
+          public void AddReference(string assemblyPath);
+      }
+    </code-block>
+  </section>
+  
+  <section>
+    <title>4.4 SkillManager 类</title>
+    <paragraph>
+      <code>SkillManager</code>类管理Skill的保存和加载：
+    </paragraph>
+    <code-block language="csharp">
+      public class SkillManager
+      {
+          public List<Skill> GetAllSkills();
+          public Skill SaveSkill(string name, string description, string script, 
+                                string originalInput, Dictionary<string, object> parameters = null);
+          public Skill LoadSkill(string filePath);
+          public bool UpdateSkill(Skill skill);
+          public bool DeleteSkill(Skill skill);
+          public void RecordSkillUse(Skill skill);
+      }
+    </code-block>
+  </section>
+  
+  <section>
+    <title>4.5 数据结构</title>
+    
+    <subsection>
+      <title>4.5.1 ScriptGenerationResult</title>
+      <code-block language="csharp">
+        public class ScriptGenerationResult
+        {
+            public bool Success { get; set; }
+            public string Script { get; set; }
+            public string Description { get; set; }
+            public string OriginalInput { get; set; }
+            public Dictionary<string, object> Parameters { get; set; }
+            public string ErrorMessage { get; set; }
+        }
+      </code-block>
+    </subsection>
+    
+    <subsection>
+      <title>4.5.2 Skill</title>
+      <code-block language="csharp">
+        public class Skill
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public string Script { get; set; }
+            public string OriginalInput { get; set; }
+            public Dictionary<string, object> Parameters { get; set; }
+            public DateTime CreatedDate { get; set; }
+            public DateTime LastUsedDate { get; set; }
+            public int UseCount { get; set; }
+        }
+      </code-block>
+    </subsection>
+  </section>
+</chapter>

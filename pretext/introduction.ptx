@@ -1,0 +1,97 @@
+<chapter>
+  <title>第一章：引言</title>
+  
+  <section>
+    <title>1.1 项目背景</title>
+    <paragraph>
+      SolidWorks AI Script Assistant是一款创新的CAD插件，利用人工智能技术将自然语言描述转换为SolidWorks操作脚本。本项目的目标是为该插件创建专业的技术文档。
+    </paragraph>
+    <paragraph>
+      随着人工智能技术的发展，自然语言交互正在成为软件界面的重要发展方向。本插件旨在降低SolidWorks建模的学习门槛，让用户能够通过日常语言描述来创建3D模型。
+    </paragraph>
+  </section>
+  
+  <section>
+    <title>1.2 技术架构</title>
+    <paragraph>
+      插件采用分层架构设计，主要包括以下层次：
+    </paragraph>
+    <list>
+      <item><strong>UI层：</strong>用户界面，提供自然语言输入和脚本展示</item>
+      <item><strong>业务逻辑层：</strong>命令处理和工作流管理</item>
+      <item><strong>AI层：</strong>调用云端API进行脚本生成</item>
+      <item><strong>执行层：</strong>动态编译和执行生成的脚本</item>
+      <item><strong>存储层：</strong>管理可复用的Skill数据</item>
+    </list>
+    
+    <figure>
+      <image source="images/architecture.svg" width="70%" />
+      <caption>系统架构图</caption>
+    </figure>
+  </section>
+  
+  <section>
+    <title>1.3 核心功能</title>
+    <paragraph>
+      插件提供以下核心功能：
+    </paragraph>
+    <table>
+      <thead>
+        <tr>
+          <th>功能</th>
+          <th>描述</th>
+          <th>技术实现</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>自然语言转脚本</td>
+          <td>将用户输入转换为SolidWorks API脚本</td>
+          <td>OpenAI API</td>
+        </tr>
+        <tr>
+          <td>脚本执行</td>
+          <td>动态编译并执行C#脚本</td>
+          <td>C# CodeDom</td>
+        </tr>
+        <tr>
+          <td>Skill管理</td>
+          <td>保存和复用常用操作</td>
+          <td>JSON文件存储</td>
+        </tr>
+        <tr>
+          <td>插件集成</td>
+          <td>SolidWorks任务面板集成</td>
+          <td>SolidWorks API</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  
+  <section>
+    <title>1.4 数学背景</title>
+    <paragraph>
+      在CAD建模中，几何变换是基础操作。例如，三维空间中的旋转矩阵可以表示为：
+    </paragraph>
+    <equation>
+      R(\theta) = \begin{bmatrix}
+      \cos\theta & -\sin\theta & 0 \\
+      \sin\theta & \cos\theta & 0 \\
+      0 & 0 & 1
+      \end{bmatrix}
+    </equation>
+    <paragraph>
+      此矩阵用于绕z轴旋转，其中\(\theta\)为旋转角度。
+    </paragraph>
+    
+    <paragraph>
+      另外，在参数化建模中，我们经常需要处理约束方程。例如，一个简单的几何约束可以表示为：
+    </paragraph>
+    <equation>
+      x^2 + y^2 + z^2 = r^2
+    </equation>
+    <paragraph>
+      这表示一个半径为\(r\)的球体表面上点的坐标满足的方程。
+    </paragraph>
+  </section>
+</chapter>

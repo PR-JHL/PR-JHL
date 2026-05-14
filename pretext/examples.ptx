@@ -1,0 +1,167 @@
+<chapter>
+  <title>第五章：示例</title>
+  
+  <section>
+    <title>5.1 基础几何体创建</title>
+    
+    <subsection>
+      <title>5.1.1 创建立方体</title>
+      <paragraph>
+        以下是创建100mm立方体的示例：
+      </paragraph>
+      <code-block language="csharp">
+        // 创建100mm立方体
+        var partDoc = swApp.ActiveDoc as PartDoc;
+        
+        // 创建草图
+        partDoc.InsertSketch2(true);
+        var sketchManager = partDoc.SketchManager;
+        sketchManager.InsertRectangle(0, 0, 0, 0.1, 0.1, 0);
+        partDoc.InsertSketch2(true);
+        
+        // 拉伸
+        var featureManager = partDoc.FeatureManager;
+        featureManager.FeatureExtrusion2(true, false, false, 0, 0, 0.1, 0.01, 0.01, 
+            false, false, false, false, 0, 0, false, false, true, true, true, 0, 0, false);
+      </code-block>
+    </subsection>
+    
+    <subsection>
+      <title>5.1.2 创建圆柱体</title>
+      <paragraph>
+        以下是创建直径50mm、高度200mm圆柱的示例：
+      </paragraph>
+      <code-block language="csharp">
+        // 创建圆柱
+        var partDoc = swApp.ActiveDoc as PartDoc;
+        
+        // 创建草图
+        partDoc.InsertSketch2(true);
+        var sketchManager = partDoc.SketchManager;
+        sketchManager.CreateCircle(0, 0, 0, 0.025, 0, 0);
+        partDoc.InsertSketch2(true);
+        
+        // 拉伸
+        var featureManager = partDoc.FeatureManager;
+        featureManager.FeatureExtrusion2(true, false, false, 0, 0, 0.2, 0.01, 0.01, 
+            false, false, false, false, 0, 0, false, false, true, true, true, 0, 0, false);
+      </code-block>
+    </subsection>
+  </section>
+  
+  <section>
+    <title>5.2 草图绘制</title>
+    <paragraph>
+      以下是绘制多边形草图的示例：
+    </paragraph>
+    <code-block language="csharp">
+      // 绘制五边形草图
+      var partDoc = swApp.ActiveDoc as PartDoc;
+      partDoc.InsertSketch2(true);
+      
+      var sketchManager = partDoc.SketchManager;
+      
+      // 绘制五条边
+      double radius = 0.05; // 50mm
+      for (int i = 0; i < 5; i++)
+      {
+          double angle1 = i * 2 * Math.PI / 5;
+          double angle2 = (i + 1) * 2 * Math.PI / 5;
+          sketchManager.CreateLine(
+              radius * Math.Cos(angle1), 
+              radius * Math.Sin(angle1), 
+              0,
+              radius * Math.Cos(angle2), 
+              radius * Math.Sin(angle2), 
+              0
+          );
+      }
+      
+      partDoc.InsertSketch2(true);
+    </code-block>
+  </section>
+  
+  <section>
+    <title>5.3 特征操作</title>
+    
+    <subsection>
+      <title>5.3.1 拉伸操作</title>
+      <code-block language="csharp">
+        // 拉伸操作示例
+        var partDoc = swApp.ActiveDoc as PartDoc;
+        var featureManager = partDoc.FeatureManager;
+        
+        // 参数说明：
+        // direction1: true=单向拉伸
+        // midPlane: false=不从中间拉伸
+        // reverseDirection: false=不反向
+        // startCondition: 0=从草图平面开始
+        // endCondition: 0=给定深度
+        // depth: 0.05=50mm深度
+        featureManager.FeatureExtrusion2(
+            true, false, false, 0, 0, 0.05, 0.01, 0.01,
+            false, false, false, false, 0, 0, false, false, 
+            true, true, true, 0, 0, false
+        );
+      </code-block>
+    </subsection>
+    
+    <subsection>
+      <title>5.3.2 旋转操作</title>
+      <code-block language="csharp">
+        // 旋转操作示例
+        var partDoc = swApp.ActiveDoc as PartDoc;
+        var featureManager = partDoc.FeatureManager;
+        
+        // 参数说明：
+        // direction1: true=单向旋转
+        // midPlane: false=不从中间旋转
+        // reverseDirection: false=不反向
+        // flipDirection: false=不翻转方向
+        // startAngle: 0=起始角度
+        // endAngle: Math.PI*2=360度
+        featureManager.FeatureRevolve2(
+            true, false, false, false, true, false,
+            0, 0, Math.PI * 2, 0.0,
+            false, false, 0.01, 0.01, 0, 0, 0,
+            true, true, true
+        );
+      </code-block>
+    </subsection>
+  </section>
+  
+  <section>
+    <title>5.4 完整工作流示例</title>
+    <paragraph>
+      以下是一个完整的建模工作流示例：
+    </paragraph>
+    <code-block language="csharp">
+      // 创建新零件文档
+      string templatePath = swApp.GetUserPreferenceStringValue(
+          (int)swUserPreferenceStringValue_e.swDefaultTemplatePart);
+      ModelDoc2 modelDoc = swApp.NewDocument(templatePath, 0, 0, 0);
+      
+      // 选择前视基准面
+      modelDoc.Extension.SelectByID2("Front", "PLANE", 0, 0, 0, false, 0, null, 0);
+      
+      // 创建草图
+      SketchManager sketchManager = modelDoc.SketchManager;
+      modelDoc.InsertSketch2(true);
+      
+      // 绘制矩形
+      double size = 0.1; // 100mm
+      sketchManager.InsertRectangle(-size/2, -size/2, 0, size/2, size/2, 0);
+      
+      // 退出草图
+      modelDoc.InsertSketch2(true);
+      
+      // 拉伸特征
+      FeatureManager featureManager = modelDoc.FeatureManager;
+      featureManager.FeatureExtrusion2(true, false, false, 0, 0, 0.05, 0.01, 0.01, 
+          false, false, false, false, 0, 0, false, false, true, true, true, 0, 0, false);
+      
+      // 保存文档
+      modelDoc.SaveAs("MyPart.SLDPRT", 0, 0, null);
+    </code-block>
+  </section>
+</chapter>
