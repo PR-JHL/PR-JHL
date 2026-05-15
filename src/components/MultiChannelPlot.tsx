@@ -56,7 +56,7 @@ export const MultiChannelPlot: React.FC = () => {
     ctx.lineWidth = 1;
     
     const channelHeight = height / 8;
-    const padding = 50;
+    const padding = 40;
     const plotAreaWidth = width - padding;
 
     for (let channelIdx = 0; channelIdx < 8; channelIdx++) {
@@ -67,19 +67,19 @@ export const MultiChannelPlot: React.FC = () => {
       
       ctx.beginPath();
       ctx.strokeStyle = '#f0f0f0';
-      for (let i = 0; i <= 6; i++) {
-        const y = yOffset + (channelHeight / 6) * i;
+      for (let i = 0; i <= 4; i++) {
+        const y = yOffset + (channelHeight / 4) * i;
         ctx.moveTo(padding, y);
         ctx.lineTo(width, y);
       }
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.strokeStyle = '#d0d0d0';
-      for (let i = 0; i <= 10; i++) {
-        const x = padding + (plotAreaWidth / 10) * i;
-        ctx.moveTo(x, yOffset);
-        ctx.lineTo(x, yOffset + channelHeight);
+      ctx.strokeStyle = '#e0e0e0';
+      for (let i = 0; i <= 8; i++) {
+        const x = padding + (plotAreaWidth / 8) * i;
+        ctx.moveTo(x, yOffset + 2);
+        ctx.lineTo(x, yOffset + channelHeight - 2);
       }
       ctx.stroke();
 
@@ -88,7 +88,7 @@ export const MultiChannelPlot: React.FC = () => {
         
         ctx.beginPath();
         ctx.strokeStyle = channel.color;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1.5;
 
         visibleData.forEach((data, idx) => {
           const x = padding + (idx / (visibleData.length - 1)) * plotAreaWidth;
@@ -99,7 +99,7 @@ export const MultiChannelPlot: React.FC = () => {
             const minVal = Math.min(...allValues);
             const maxVal = Math.max(...allValues);
             const range = maxVal - minVal || 1;
-            const y = yOffset + channelHeight - ((value - minVal) / range) * (channelHeight - 10);
+            const y = yOffset + channelHeight - 4 - ((value - minVal) / range) * (channelHeight - 8);
             if (idx === 0) {
               ctx.moveTo(x, y);
             } else {
@@ -107,7 +107,7 @@ export const MultiChannelPlot: React.FC = () => {
             }
           } else {
             const range = yMax - yMin;
-            const y = yOffset + channelHeight - ((value - yMin) / range) * (channelHeight - 10);
+            const y = yOffset + channelHeight - 4 - ((value - yMin) / range) * (channelHeight - 8);
             if (idx === 0) {
               ctx.moveTo(x, y);
             } else {
@@ -119,163 +119,162 @@ export const MultiChannelPlot: React.FC = () => {
         ctx.stroke();
 
         ctx.fillStyle = channel.color;
-        ctx.font = '12px Arial';
-        ctx.fillText(channel.name, width - 80, yOffset + 20);
+        ctx.font = '10px Arial';
+        ctx.fillText(channel.name, width - 65, yOffset + 14);
       }
 
       ctx.fillStyle = '#666';
-      ctx.font = '10px Arial';
-      if (autoScaleY) {
+      ctx.font = '8px Arial';
+      if (autoScaleY && channelData.length > 0) {
         const allValues = channelData.map(d => d.values[channelIdx] * channel.gain + channel.offset);
         const minVal = Math.min(...allValues);
         const maxVal = Math.max(...allValues);
-        ctx.fillText(maxVal.toFixed(2), 5, yOffset + 15);
-        ctx.fillText(minVal.toFixed(2), 5, yOffset + channelHeight - 5);
+        ctx.fillText(maxVal.toFixed(2), 3, yOffset + 10);
+        ctx.fillText(minVal.toFixed(2), 3, yOffset + channelHeight - 4);
       } else {
-        ctx.fillText(yMax.toFixed(2), 5, yOffset + 15);
-        ctx.fillText(yMin.toFixed(2), 5, yOffset + channelHeight - 5);
+        ctx.fillText(yMax.toFixed(2), 3, yOffset + 10);
+        ctx.fillText(yMin.toFixed(2), 3, yOffset + channelHeight - 4);
       }
     }
 
     ctx.fillStyle = '#666';
-    ctx.font = '10px Arial';
-    ctx.fillText('0', padding - 10, height - 5);
-    ctx.fillText(String(plotWidth), width - 30, height - 5);
+    ctx.font = '8px Arial';
+    ctx.fillText('0', padding - 8, height - 4);
+    ctx.fillText(String(plotWidth), width - 25, height - 4);
 
   }, [channelData, channels, autoScaleY, yMin, yMax, plotWidth]);
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-slate-200 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-50 rounded-lg">
-            <Activity className="w-6 h-6 text-blue-600" />
+    <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-3">
+      <div className="flex items-center justify-between mb-2.5">
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 bg-blue-50 rounded">
+            <Activity className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-slate-800">多通道数据可视化</h2>
-            <p className="text-sm text-slate-500">Serial Plot 风格显示</p>
+            <h2 className="text-sm font-semibold text-slate-800">Multi-Channel Plot</h2>
+            <p className="text-xs text-slate-500">Serial Plot View</p>
           </div>
         </div>
         <button
           onClick={clearChannelData}
-          className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors"
+          className="flex items-center gap-1 px-2.5 py-1.5 bg-slate-100 text-slate-700 text-xs rounded hover:bg-slate-200 transition-colors"
         >
-          <Trash2 className="w-4 h-4" />
-          清除数据
+          <Trash2 className="w-3 h-3" />
+          Clear
         </button>
       </div>
 
-      <div className="flex gap-4 mb-4">
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-slate-600">Buffer Size:</label>
+      <div className="flex flex-wrap gap-2 mb-2.5">
+        <div className="flex items-center gap-1.5">
+          <label className="text-xs text-slate-600">Buffer:</label>
           <input
             type="number"
             value={bufferSize}
             onChange={(e) => setBufferSize(Number(e.target.value))}
-            className="w-24 px-2 py-1 border border-slate-300 rounded text-sm"
+            className="w-20 px-2 py-1 text-xs border border-slate-300 rounded"
           />
         </div>
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-slate-600">Plot Width:</label>
+        <div className="flex items-center gap-1.5">
+          <label className="text-xs text-slate-600">Width:</label>
           <input
             type="number"
             value={plotWidth}
             onChange={(e) => setPlotWidth(Number(e.target.value))}
-            className="w-24 px-2 py-1 border border-slate-300 rounded text-sm"
+            className="w-20 px-2 py-1 text-xs border border-slate-300 rounded"
           />
         </div>
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-slate-600">Auto Scale Y:</label>
+        <div className="flex items-center gap-1.5">
+          <label className="text-xs text-slate-600">Auto Y:</label>
           <input
             type="checkbox"
             checked={autoScaleY}
             onChange={(e) => setAutoScaleY(e.target.checked)}
-            className="w-4 h-4 rounded"
+            className="w-3.5 h-3.5 rounded"
           />
         </div>
         {!autoScaleY && (
           <>
-            <div className="flex items-center gap-2">
-              <label className="text-sm text-slate-600">Y Min:</label>
+            <div className="flex items-center gap-1.5">
+              <label className="text-xs text-slate-600">Y Min:</label>
               <input
                 type="number"
                 step="0.1"
                 value={yMin}
                 onChange={(e) => setYMin(Number(e.target.value))}
-                className="w-20 px-2 py-1 border border-slate-300 rounded text-sm"
+                className="w-16 px-2 py-1 text-xs border border-slate-300 rounded"
               />
             </div>
-            <div className="flex items-center gap-2">
-              <label className="text-sm text-slate-600">Y Max:</label>
+            <div className="flex items-center gap-1.5">
+              <label className="text-xs text-slate-600">Y Max:</label>
               <input
                 type="number"
                 step="0.1"
                 value={yMax}
                 onChange={(e) => setYMax(Number(e.target.value))}
-                className="w-20 px-2 py-1 border border-slate-300 rounded text-sm"
+                className="w-16 px-2 py-1 text-xs border border-slate-300 rounded"
               />
             </div>
           </>
         )}
+        <div className="flex gap-1.5 ml-auto">
+          <button
+            onClick={showAllChannels}
+            className="px-2.5 py-1 bg-blue-100 text-blue-700 text-xs rounded hover:bg-blue-200"
+          >
+            Show All
+          </button>
+          <button
+            onClick={hideAllChannels}
+            className="px-2.5 py-1 bg-blue-100 text-blue-700 text-xs rounded hover:bg-blue-200"
+          >
+            Hide All
+          </button>
+        </div>
       </div>
 
-      <div className="flex gap-2 mb-4">
-        <button
-          onClick={showAllChannels}
-          className="px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200"
-        >
-          Show All
-        </button>
-        <button
-          onClick={hideAllChannels}
-          className="px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200"
-        >
-          Hide All
-        </button>
-      </div>
-
-      <div className="bg-slate-50 rounded-lg p-4 mb-4">
+      <div className="bg-slate-50 rounded p-2 mb-2.5">
         <canvas
           ref={canvasRef}
-          width={800}
-          height={400}
+          width={700}
+          height={280}
           className="w-full rounded border border-slate-200"
         />
       </div>
 
-      <div className="bg-slate-50 rounded-lg overflow-x-auto">
-        <table className="w-full text-sm">
+      <div className="bg-slate-50 rounded overflow-x-auto">
+        <table className="w-full text-xs">
           <thead>
             <tr className="bg-slate-100">
-              <th className="px-3 py-2 text-left font-medium">Channel</th>
-              <th className="px-3 py-2 text-center font-medium">Visible</th>
-              <th className="px-3 py-2 text-center font-medium">Gain</th>
-              <th className="px-3 py-2 text-center font-medium">Offset</th>
+              <th className="px-2 py-1.5 text-left font-medium">Channel</th>
+              <th className="px-2 py-1.5 text-center font-medium">Visible</th>
+              <th className="px-2 py-1.5 text-center font-medium">Gain</th>
+              <th className="px-2 py-1.5 text-center font-medium">Offset</th>
             </tr>
           </thead>
           <tbody>
             {channels.map((channel) => (
               <tr key={channel.id} className="border-t border-slate-200 hover:bg-slate-100">
-                <td className="px-3 py-2">
+                <td className="px-2 py-1.5">
                   <span 
-                    className="inline-block w-3 h-3 rounded-full mr-2"
+                    className="inline-block w-2.5 h-2.5 rounded-full mr-1.5"
                     style={{ backgroundColor: channel.color }}
                   />
                   {channel.name}
                 </td>
-                <td className="px-3 py-2 text-center">
+                <td className="px-2 py-1.5 text-center">
                   <button
                     onClick={() => toggleChannelVisibility(channel.id)}
-                    className="p-1 hover:bg-slate-200 rounded"
+                    className="p-0.5 hover:bg-slate-200 rounded"
                   >
                     {channel.visible ? (
-                      <Eye className="w-4 h-4 text-green-600" />
+                      <Eye className="w-3.5 h-3.5 text-green-600" />
                     ) : (
-                      <EyeOff className="w-4 h-4 text-slate-400" />
+                      <EyeOff className="w-3.5 h-3.5 text-slate-400" />
                     )}
                   </button>
                 </td>
-                <td className="px-3 py-2 text-center">
+                <td className="px-2 py-1.5 text-center">
                   <input
                     type="number"
                     step="0.1"
@@ -287,10 +286,10 @@ export const MultiChannelPlot: React.FC = () => {
                         channelsCopy[idx].gain = Number(e.target.value);
                       }
                     }}
-                    className="w-16 px-2 py-1 border border-slate-300 rounded text-center text-sm"
+                    className="w-14 px-1.5 py-0.5 text-center text-xs border border-slate-300 rounded"
                   />
                 </td>
-                <td className="px-3 py-2 text-center">
+                <td className="px-2 py-1.5 text-center">
                   <input
                     type="number"
                     step="0.1"
@@ -302,7 +301,7 @@ export const MultiChannelPlot: React.FC = () => {
                         channelsCopy[idx].offset = Number(e.target.value);
                       }
                     }}
-                    className="w-16 px-2 py-1 border border-slate-300 rounded text-center text-sm"
+                    className="w-14 px-1.5 py-0.5 text-center text-xs border border-slate-300 rounded"
                   />
                 </td>
               </tr>
