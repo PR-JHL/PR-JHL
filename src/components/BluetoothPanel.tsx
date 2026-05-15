@@ -49,14 +49,24 @@ export const BluetoothPanel: React.FC = () => {
             <p className="text-sm text-slate-500">连接心脏起搏导线检测设备</p>
           </div>
         </div>
-        <button
-          onClick={handleScan}
-          disabled={scanning}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
-        >
-          {scanning ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-          {scanning ? '扫描中...' : '扫描设备'}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleScan}
+            disabled={scanning}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+          >
+            {scanning ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+            {scanning ? '扫描中...' : '扫描设备'}
+          </button>
+          <button
+            onClick={() => handleConnect(mockDevices[0])}
+            disabled={isConnected}
+            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+          >
+            <Activity className="w-4 h-4" />
+            快速连接
+          </button>
+        </div>
       </div>
 
       {isConnected && connectedDevice ? (

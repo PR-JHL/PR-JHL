@@ -1,6 +1,6 @@
 import React from 'react';
 import { BluetoothPanel } from '../components/BluetoothPanel';
-import { DataVisualization } from '../components/DataVisualization';
+import { MultiChannelPlot } from '../components/MultiChannelPlot';
 import { CommandPanel } from '../components/CommandPanel';
 import { Activity } from 'lucide-react';
 
@@ -14,19 +14,19 @@ export const Home: React.FC = () => {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-slate-800">心脏起搏导线检测系统</h1>
-            <p className="text-sm text-slate-500">蓝牙与压电模块通信界面</p>
+            <p className="text-sm text-slate-500">蓝牙与压电模块通信界面 - Serial Plot 风格</p>
           </div>
         </div>
       </header>
 
       <main className="p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-1 space-y-6">
             <BluetoothPanel />
             <CommandPanel />
           </div>
-          <div className="lg:col-span-2">
-            <DataVisualization />
+          <div className="lg:col-span-3">
+            <MultiChannelPlot />
           </div>
         </div>
       </main>
